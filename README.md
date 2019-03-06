@@ -3,8 +3,8 @@ cs418-project-slamming-squad-1 created by GitHub Classroom
 
 <h1><b>[Importants]Dear Bros, Cheer Up, No pain No gain!</b></h1>
 <h2>Team Grade</h2>
-    1. We will give peer grade during the project process. This would be a weight counted in final grade. It would definitely base on what you output in this project.
-    2. The code submissions uploaded in GitHub repo will calculated automatically by the GitHub system as another weight. So keep in mind to upload your codes at any time
+    <br>1. We will give peer grade during the project process. This would be a weight counted in final grade. It would definitely base on what you output in this project.
+    <br>2. The code submissions uploaded in GitHub repo will calculated automatically by the GitHub system as another weight. So keep in mind to upload your codes at any time
 
 <h2>[Submission Conduct] <Edited by DaHang, Keep updating></h2>
 1. Please create folders when you submit your codes into the Project Code Page
