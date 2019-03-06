@@ -8,12 +8,12 @@ Team Grade:
 
 [Submission Conduct] <Edited by DaHang, Keep updating>
 1. Please create folders when you submit your codes into the Project Code Page
-   How to create files/folders in Github Repository? ->see https://help.github.com/en/articles/creating-new-files
-   How to upload files -> Just click upload files, and then drag your files to the rectangle; Otherwise, please Google it.
+   <br>How to create files/folders in Github Repository? ->see https://help.github.com/en/articles/creating-new-files
+   <br>How to upload files -> Just click upload files, and then drag your files to the rectangle; Otherwise, please Google it.
 2. Naming Conventions
-  2.1 Please name your folder or your file to be understandable. FullName with camel format are preferrable.
+  <br>2.1 Please name your folder or your file to be understandable. FullName with camel format are preferrable.
         for example: Bitcoin_Market_Data.csv, Cryptocurrency_Media_Data.csv
-  2.2 TBD
+  <br>2.2 TBD
 
 <Timelines>
 [Week 2019-Mar-4] Assignments list <-> Tasks list
