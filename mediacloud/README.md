@@ -1,8 +1,8 @@
 https://github.com/berkmancenter/mediacloud/blob/master/doc/api_2_0_spec/api_2_0_spec.md#stories
 
-==>MyOwnTrial is as below:
+<br>==>MyOwnTrial is as below:
 
-Sign up Mediacloud Account in mediacloud registration
-Obtain API key from account/profile
-Try get the medialist<see file mediacloud/media.csv>
-Try get the storylist<see file mediacloud/story_list.csv>
+<br>Sign up Mediacloud Account in mediacloud registration
+<br>Obtain API key from account/profile
+<br>Try get the medialist<see file mediacloud/media.csv>
+<br>Try get the storylist<see file mediacloud/story_list.csv>
