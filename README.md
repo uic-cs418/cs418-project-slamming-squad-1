@@ -15,6 +15,6 @@ cs418-project-slamming-squad-1 created by GitHub Classroom
         for example: Bitcoin_Market_Data.csv, Cryptocurrency_Media_Data.csv
   <br>2.2 TBD
 
-<h2><Timelines></h2>
+<h2>Timelines</h2>
 <br>[Week 2019-Mar-4] Assignments list <-> Tasks list
 <br>[Week 2019-Mar-11] !!!!Last week to switch proposal topic
