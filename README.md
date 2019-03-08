@@ -1,9 +1,16 @@
 <h1><b># cs418-project-slamming-squad-1</b></h1>
 cs418-project-slamming-squad-1 created by GitHub Classroom
 
+<h2>Here are some important memos</h2>
+<br>1. Please keep your WeChat team name in accordance with that in your GitHub account. <Better use your real name>
+<br>2. We will create discussions/issues on the Github classroom, go the issues/discussions as frequent as possible.
+<br>3. We will use WeChat as communication meetup tool.
+<br>4. <TBD>
+
+
 <h1><b>[Importants]Dear Bros, Cheer Up, No pain No gain!</b></h1>
-<h2>Team Grade</h2>
-    <br>1. We will give peer grade during the project process. This would be a weight counted in final grade. It would definitely base on what you output in this project.
+<h2>Team Grade contains two parts:</h2>
+    <br>1. Peer grade during the project process. This would be a weight counted in final grade. It would definitely base on what you output in this project.
     <br>2. The code submissions uploaded in GitHub repo will calculated automatically by the GitHub system as another weight. So keep in mind to upload your codes at any time
 
 <h2>[Submission Conduct] Edited by DaHang, Keep updating</h2>
