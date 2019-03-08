@@ -5,7 +5,7 @@ cs418-project-slamming-squad-1 created by GitHub Classroom
 <br>1. Please keep your WeChat team name in accordance with that in your GitHub account. <Better use your real name>
 <br>2. We will create discussions/issues on the Github classroom, go the issues/discussions as frequent as possible.
 <br>3. We will use WeChat as communication meetup tool.
-<br>4. <TBD>
+<br>4. TBD
 
 
 <h1><b>[Importants]Dear Bros, Cheer Up, No pain No gain!</b></h1>
@@ -14,10 +14,10 @@ cs418-project-slamming-squad-1 created by GitHub Classroom
     <br>2. The code submissions uploaded in GitHub repo will calculated automatically by the GitHub system as another weight. So keep in mind to upload your codes at any time
 
 <h2>[Submission Conduct] Edited by DaHang, Keep updating</h2>
-1. Please create folders when you submit your codes into the Project Code Page
+<h3>1. Please create folders when you submit your codes into the Project Code Page</h3>
    <br>How to create files/folders in Github Repository? ->see https://help.github.com/en/articles/creating-new-files
    <br>How to upload files -> Just click upload files, and then drag your files to the rectangle; Otherwise, please Google it.
-2. Naming Conventions
+<br><h3>2. Naming Conventions</h3>
   <br>2.1 Please name your folder or your file to be understandable. FullName with camel format are preferrable.
         for example: Bitcoin_Market_Data.csv, Cryptocurrency_Media_Data.csv
   <br>2.2 TBD
