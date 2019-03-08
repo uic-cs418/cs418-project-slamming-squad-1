@@ -2,7 +2,7 @@
 cs418-project-slamming-squad-1 created by GitHub Classroom
 
 <h2>Here are some important memos</h2>
-<br>1. Please keep your WeChat team name in accordance with that in your GitHub account. <Better use your real name>
+<br>1. Please kindly keep all your names/tags in accordance with your GitHub account. <Better use your real name>. It's good practice to distinguish you and other team members.
 <br>2. We will create discussions/issues on the Github classroom, go the issues/discussions as frequent as possible.
 <br>3. We will use WeChat as communication meetup tool.
 <br>4. TBD
