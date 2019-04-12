@@ -1,0 +1,35 @@
+Reflection: a discussion of the following:
+o What is hardest part of the project that you’ve encountered so far?
+
+We have encountered some challenges before. The biggest challenge is about how to collect data from various data resources and 
+figure out how the clean the data. We first tried to find some APIs and download news data in a good format. But all cryptocurrency news websites 
+do not provide such kind of API. And then we try to find some news search engine APIs. Unfortunately, news search engine like Google news doesn't
+have such API. Other news API like https://newsapi.org/ can only crawl new data for one recent month. So we have to crawl raw data and do data cleaning 
+about them which turns out to be very tedious and challenging.   
+
+o What are your initial insights?
+
+Our goal is to explore the change of bitcoin market price and news from various online sources. We plot the bitcoin prices and the counts of 
+occurrences about bitcoin in social media. We found high correlation between them.
+
+
+o Are there any concrete results you can show at this point? If not, why not? o Going forward, what are the current biggest problems you’re facing?
+
+
+We now have files of bitcoin price of one-year period. We also crawled news data from one website and did data cleaning to the raw news data.
+Several training models have been built and integrated into one plateform with a UI that makes it easier use. 
+
+The current biggest problem we have is to crawl larger size of data set as well as doing data cleaning about them and building models to train them.
+
+
+o Do you think you are on track with your project? If not, what parts do you need to dedicate more time to?
+
+Yes. We are now on the track. We now have data and basic models. We need to crawl more data and modify our model. We should finish the project as we scheduled
+before.
+
+
+
+o Given your initial exploration of the data, is it worth proceeding with your project, why? If not, how are you going to change your project and why do you think it’s better than your current results?
+
+Yes. Explore the correlation between bitcoin price and related news is very interesting. We now find the high correlation about them.
+We hope to build one model that can predict the change of bitcoin price well in the future.
