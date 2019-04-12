@@ -379,7 +379,7 @@ class data_GUI(QDialog, Ui_data):
         self.table.setRowCount(len(col1))
         self.table.setHorizontalHeaderLabels([df.columns[0], df.columns[1]])
         for i in range(len(col1)):
-            self.table.setItem(i, 0, QTableWidgetItem(col1[i]))
+            self.table.setItem(i, 0, QTableWidgetItem(str(col1[i])))
             self.table.setItem(i, 1, QTableWidgetItem(col2[i]))
         header = self.table.horizontalHeader()
         header.setSectionResizeMode(0, QHeaderView.ResizeToContents)
@@ -671,7 +671,7 @@ class LoadTEXTDatabase:
                     list_of_names.append(1)
         else:
             for label in processed_records[col]:
-                list_of_names.append(label)
+                list_of_names.append(int(label))
         return np.array(list_of_names)
 
     def classify_records(self, tfidf, classifier, unlabeled_records):
