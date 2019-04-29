@@ -19,5 +19,5 @@ Price History of top 10 Cryptocurrencies. Strong correlation between them is fou
 
 
 <h2>Timelines</h2>
-<br>[Week 2019-Mar-4] Assignments list <-> Tasks list
-<br>[Week 2019-Mar-11] !!!!Last week to switch proposal topic
+<br>[Week 2019-May-1] Our presentation Day - Looking forward to seeing you then.
+<br>[Week 2019-Mar-7] Final deliverables.
