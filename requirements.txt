@@ -1,0 +1,6 @@
+selenium
+afinn
+numpy
+seaborn
+pandas
+textblob

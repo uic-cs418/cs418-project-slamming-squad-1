@@ -12,24 +12,20 @@ def pre_process_price(price_df):
     price_df['date'] = price_df['date'].apply(lambda x: datetime.datetime.strptime(x, '%d-%b-%y'))
     price_df['open'] = price_df['open'].apply(lambda x: float(x.replace(',', '')))
     price_df['close'] = price_df['close'].apply(lambda x: float(x.replace(',', '')))
-    res_df = price_df[['date', 'open', 'close']]
-    return res_df
+    price_df['High'] = price_df['High'].apply(lambda x: float(x.replace(',', '')))
+    price_df['Low'] = price_df['Low'].apply(lambda x: float(x.replace(',', '')))
+    price_df['Volume'] = price_df['Volume'].apply(lambda x: float(x.replace(',', '')) if x != '-' else np.nan)
+    price_df['Volume'] = price_df['Volume'].fillna(price_df['Volume'].mean())
+    price_df['Market Cap'] = price_df['Market Cap'].apply(lambda x: float(x.replace(',', '')))
+    #res_df = price_df[['date', 'open', 'close']]
+    return price_df
 
-def pre_process_curr(news_df):
-    """
-    Read from cryptocurrencynews.csv
-    """
-    news_df['date'] = [x+'-'+y for x,y in zip(news_df['date'],news_df['year'].apply(str))]
-    news_df['date'] = news_df['date'].apply(lambda x: datetime.datetime.strptime(x, '%d-%b-%Y'))
-    news_df.rename(columns={'title':'text'}, inplace=True)
-    return news_df
-
-def pre_process_crypto(news_df):
+def pre_process_news(news_df):
     """
     Read from cryptonews.csv
     """
     news_df['date'] = news_df['date'].apply(lambda x: datetime.datetime.strptime(x, '%Y-%m-%d'))
-    news_df.rename(columns={'title':'text'}, inplace=True)
+    
     return news_df
 
 def combine_news(curr_df, crypto_df):
@@ -41,7 +37,7 @@ def combine_news(curr_df, crypto_df):
         returns:
             df(DataFrame): the combined dataframe of curr_df and crypto_df
     """
-    frames = [curr_df[['text','date']], crypto_df]
+    frames = [curr_df, crypto_df]
     newsOfBitcoin = pd.concat(frames, ignore_index=True)
     return newsOfBitcoin
 
@@ -49,6 +45,6 @@ def add_label(price_df):
     """
     """
     price_df['diff'] = price_df['close'] - price_df['open']
-    price_df['label'] = ['Up' if x > 0 
-                         else 'Down' for x in price_df['diff']]
+    price_df['label'] = [1 if x > 0 
+                         else 0 for x in price_df['diff']]
     return price_df
