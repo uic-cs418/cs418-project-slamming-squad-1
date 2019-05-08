@@ -28,20 +28,21 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-from sklearn.neighbors import KNeighborsClassifier
+from sklearn.neighbors import KNeighborsClassifier, KNeighborsRegressor
 from sklearn.model_selection import KFold, cross_val_score, train_test_split
 from sklearn.neural_network import MLPClassifier, MLPRegressor
 from sklearn.ensemble import BaggingClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.decomposition import KernelPCA
-from sklearn.svm import SVC
+from sklearn.svm import SVC, SVR
 import pandas as pd
 import string
 import nltk
 import sklearn
 from nltk.corpus import wordnet as wn
+from matplotlib import pyplot as plt
 
-__version__ = "1.0"
+__version__ = "1.1"
 __programname__ = "ML_TEXT"
 __emailaddress__ = "pman3@uic.edu"
 
@@ -182,6 +183,13 @@ class settings_GUI(QDialog, Ui_settings):
         self.shortcut = QShortcut(QtGui.QKeySequence(Qt.Key_Enter), self)
         self.shortcut.activated.connect(self.buttonOkayfuncton)
 
+        self.types = ["Auto", "Classification", "Regression"]
+        self.choice0.addItems(self.types)
+        self.choice0.setCurrentIndex(self.root.type)
+        self.type = 0
+        self.maxfeatures = self.root.maxfeatures
+        self.max_features.setText(str(self.maxfeatures))
+
         # Hyperparameters
         self.choice1.addItems(root.distance_metrics)
         self.choice1.setCurrentIndex(root.distance_metrics.index(root.para_knn["metric"]))
@@ -212,6 +220,9 @@ class settings_GUI(QDialog, Ui_settings):
         config.set("Settings", "window_start_view", str(self.choice_views.currentIndex() + 1))
         config.write(cfgfile)
         cfgfile.close()
+
+        self.type = self.choice0.currentIndex()
+        self.maxfeatures = int(self.max_features.text()) if self.max_features.text() != "None" else None
 
         # Hypermaparameters
         self.root.para_knn["metric"] = self.root.distance_metrics[self.choice1.currentIndex()]
@@ -356,6 +367,8 @@ class result_GUI(QDialog, Ui_result):
             self.label_1.setText("{:.6f}".format(root.fitobject.score_10FCV))
             self.label_2.setText("{:.6f}".format(root.fitobject.score_10FCV_std))
             self.label_3.setText("{:.6f}".format(root.fitobject.score))
+            print("All features: ")
+            print(root.fitobject.features)
 
     def buttonOkayfuncton(self):
         pass
@@ -492,27 +505,36 @@ class Worker(QRunnable):
 class LoadTEXTDatabase:
     """Main text data processor."""
 
-    def __init__(self, filename, model, parameters, root, progress_callback):
+    def __init__(self, filename, model, parameters, root, progress_callback, processed_data, type, maxfeatures):
         self.filename = filename
         self.model = model
         self.para = parameters
         self.root = root
         self.progress_callback = progress_callback
+        self.processed_data = processed_data
+        self.maxfeatures = maxfeatures
+        self.type = type
 
         self.score_10FCV = 0
         self.score_10FCV_std = 0
         self.score = 0
+        self.regression = 0
+        self.features = []
         self.initialize()
 
     def initialize(self):
-        self.step(5, "Loading nltk...", lambda: self.load_nltk())
-        records = self.step(10, "Reading csv file...", lambda: pd.read_csv(self.filename, na_filter=False))
-        processed_records = self.step(15, "Cleaning data...", lambda: self.process_all(records))
-        rare_words = self.step(35, "Collecting rare words...", lambda: self.get_rare_words(processed_records))
-        (self.tfidf, X) = self.step(40, "Creating the feature matrix...", lambda: self.create_features(processed_records, rare_words))
-        y = self.step(60, "Creating the result array...", lambda: self.create_labels(processed_records))
-        self.X_train, self.X_valid, self.y_train, self.y_valid = self.step(65, "Splitting train and test data set...",
-                                                                           lambda: train_test_split(X, y, test_size=0.2, random_state=0))
+        if self.processed_data:
+            self.X_train, self.X_valid, self.y_train, self.y_valid = self.processed_data[0], self.processed_data[1], \
+                                                                     self.processed_data[2], self.processed_data[3]
+        else:
+            self.step(5, "Loading nltk...", lambda: self.load_nltk())
+            records = self.step(10, "Reading csv file...", lambda: pd.read_csv(self.filename, na_filter=False))
+            processed_records = self.step(15, "Cleaning data...", lambda: self.process_all(records))
+            rare_words = self.step(35, "Collecting rare words...", lambda: self.get_rare_words(processed_records))
+            (self.tfidf, X) = self.step(40, "Creating the feature matrix...", lambda: self.create_features(processed_records, rare_words))
+            y = self.step(60, "Creating the result array...", lambda: self.create_labels(processed_records))
+            self.X_train, self.X_valid, self.y_train, self.y_valid = self.step(65, "Splitting train and test data set...",
+                                                                               lambda: train_test_split(X, y, test_size=0.2, random_state=0))
         self.step(70, "Training the model...", lambda: self.training())
         self.step(80, "Testing the model...", lambda: self.testing())
         self.progress_callback.emit((90, "Done"))
@@ -537,14 +559,26 @@ class LoadTEXTDatabase:
     def learn_classifier(self, X_train, y_train, modelname, para):
         """ learns a classifier from the input features and labels using the model selected and parameters provided."""
 
-        if modelname == "kNN":
-            model = KNeighborsClassifier(**para)
-        elif modelname == "SVM":
-            model = SVC(**para)
-        elif modelname == "Neural Network":
-            model = MLPClassifier(**para)
+        if self.regression == 0 or self.type == 1:
+            if modelname == "kNN":
+                model = KNeighborsClassifier(**para)
+            elif modelname == "SVM":
+                model = SVC(**para)
+            elif modelname == "Neural Network":
+                model = MLPClassifier(**para)
+            else:
+                model = KNeighborsClassifier(**para)
         else:
-            model = KNeighborsClassifier(**para)
+            if "random_state" in para:
+                del para["random_state"]
+            if modelname == "kNN":
+                model = KNeighborsRegressor(**para)
+            elif modelname == "SVM":
+                model = SVR(**para)
+            elif modelname == "Neural Network":
+                model = MLPRegressor(**para)
+            else:
+                model = KNeighborsRegressor(**para)
 
         model.fit(X_train, y_train)
         return model
@@ -575,8 +609,10 @@ class LoadTEXTDatabase:
             Outputs:
                 list(str): tokenized text
             """
+        # print(text)
         text = text.lower()
-        text = text.replace("-", " ").replace("'s", "").replace("'", "")
+        text = text.replace("–", '-').replace("-", " ").replace("’", "'").replace("‘", "'")\
+            .replace("“", '"').replace("”", '"').replace("'s", "").replace("'", "")
         # text = text.translate(str.maketrans('', '', string.punctuation))
         text = text.translate(str.maketrans(string.punctuation, ' ' * len(string.punctuation)))
         text = nltk.word_tokenize(text)
@@ -591,6 +627,7 @@ class LoadTEXTDatabase:
                 return
 
         tokens = [lemmatizer.lemmatize(token[0], get_wordnet_pos(token[1])) for token in tokens]
+        # print(tokens)
         return tokens
 
     def process_all(self, df, lemmatizer=nltk.stem.wordnet.WordNetLemmatizer()):
@@ -640,9 +677,11 @@ class LoadTEXTDatabase:
             filtered_words = [word for word in filtered_words if word not in stop_words]
             # tweet_doc = " ".join(filtered_words)
             corpus.append(filtered_words)
-        vectorizer = sklearn.feature_extraction.text.TfidfVectorizer(tokenizer=self.mirror_tokenizer, lowercase=False)
+        vectorizer = sklearn.feature_extraction.text.TfidfVectorizer(tokenizer=self.mirror_tokenizer, lowercase=False,
+                                                                     max_features=self.maxfeatures)
         X = vectorizer.fit_transform(corpus)
-        # print(len(vectorizer.get_feature_names()))    # 8386
+        self.features = vectorizer.get_feature_names()
+        print("Number of features: {}. ".format(len(vectorizer.get_feature_names())))    # 8386
         # print(X.shape)    # (17298, 8386)
         # print(type(X))    # <class 'scipy.sparse.csr.csr_matrix'>
         return vectorizer, X
@@ -669,9 +708,19 @@ class LoadTEXTDatabase:
                     list_of_names.append(0)
                 else:
                     list_of_names.append(1)
+        elif col == "rating" and self.type == 1:
+            for rating in processed_records[col]:
+                if rating >= 8:
+                    list_of_names.append(1)
+                elif rating >= 6:
+                    list_of_names.append(0)
+                else:
+                    list_of_names.append(-1)
         else:
             for label in processed_records[col]:
                 list_of_names.append(int(label))
+        if max(list_of_names) > 1:
+            self.regression = 1
         return np.array(list_of_names)
 
     def classify_records(self, tfidf, classifier, unlabeled_records):
@@ -740,6 +789,10 @@ class ML_TEXT_UI(QMainWindow, Ui_main):
         self.warningcolor2 = 'orange'
         self.warningcolor3 = 'royalblue'
 
+        self.processed_data = None
+        self.maxfeatures = None
+        self.type = 0
+
         self.models = ["kNN", "SVM", "Neural Network"]
         self.model = "kNN"
         self.para_knn = {"n_neighbors": 5, "metric": 'minkowski', "n_jobs": -1}
@@ -776,6 +829,8 @@ class ML_TEXT_UI(QMainWindow, Ui_main):
             self.addlog('{} format is not supported. Please select a .CSV file to open.'.format(self.filename[-4:None]),
                         self.warningcolor2)
 
+        self.processed_data = None
+
     def select_model(self):
         window_load = loadmodel(self, self.models, self.model)
         window_load.show()
@@ -810,13 +865,16 @@ class ML_TEXT_UI(QMainWindow, Ui_main):
             self.threadpool.start(worker)
 
     def execute_fit(self, progress_callback):
-        self.fitobject = LoadTEXTDatabase(self.file, self.model, self.para, self, progress_callback)
+        self.fitobject = LoadTEXTDatabase(self.file, self.model, self.para, self, progress_callback,
+                                          self.processed_data, self.type, self.maxfeatures)
 
         if self.abortmission == 1:
             return "ABORT"
         else:
             result = [self.fitobject.score_10FCV, self.fitobject.score_10FCV_std,
                       self.fitobject.score]
+            self.processed_data = [self.fitobject.X_train, self.fitobject.X_valid,
+                                   self.fitobject.y_train, self.fitobject.y_valid]
 
         return result
 
@@ -841,6 +899,17 @@ class ML_TEXT_UI(QMainWindow, Ui_main):
     def showresult(self):
         window_result = result_GUI(self)
         window_result.show()
+
+        self.f_importances(abs(self.fitobject.classifier.coef_.toarray()[0]), self.fitobject.features, top=30)
+
+    def f_importances(self, coef, names, top=-1):
+        imp = coef
+        #     imp,names = zip(*sorted(zip(imp,names))[:20])   # least importance 30
+        imp, names = zip(*sorted(zip(imp, names))[-15:])
+        plt.barh(range(len(names)), imp, align='center')
+        plt.yticks(range(len(names)), names)
+        plt.title("Most contributing features in linear SVM model")
+        plt.show()
 
     def Abort_mission(self):
         self.abortmission = 1
@@ -919,7 +988,8 @@ class ML_TEXT_UI(QMainWindow, Ui_main):
 
         yesorno = window_settings.exec_()  # Crucial to capture the result. 1 for Yes and 0 for No.
         if yesorno:
-            pass
+            self.maxfeatures = window_settings.maxfeatures
+            self.type = window_settings.type
 
     def quitfullscreen(self):
         if self.isFullScreen():
