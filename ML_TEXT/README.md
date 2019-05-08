@@ -33,9 +33,14 @@ For example, in MAC OS Terminal, first `cd <path to program root folder>`, once 
 # Update log
 
 v. 1.0: 
+
 Initial build. kNN, SVM and Neural Network are included. 
 
 v. 1.1: 
+
 Added new feature: Regression models. Available in Settings. 
+
 Added new feature: Limiting Max Features. Available in Settings. 
+
 Added new feature: Preload feature matrix from last run if same data.
+
